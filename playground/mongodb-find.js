@@ -9,7 +9,7 @@ MongoClient.connect('mongodb://localhost:27017/', (err, client) =>  {
   var db = client.db('TodoApp');
 
   var data = [];
-var a= 5;
+  var a= 5;
   db.collection('Todos').find().toArray().then((docs) => {
     console.log(a);
     // console.log(JSON.stringify(docs, undefined, 2));
