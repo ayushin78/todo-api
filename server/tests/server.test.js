@@ -4,8 +4,16 @@ const request = require('supertest');
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
+var todos = [{
+  text : 'cooking'
+}, {
+  text : 'Programmming'
+}];
+
 beforeEach((done) => {
-  Todo.remove({}).then(() => done());
+  Todo.remove({}).then(() => {
+    return Todo.insertMany(todos);
+  }).then(() => done());
 });
 
 describe('POST /todos', () => {
@@ -24,7 +32,7 @@ describe('POST /todos', () => {
         return done(err);
       }
 
-      Todo.find().then((todos) =>{
+      Todo.find({text}).then((todos) =>{
         expect(todos.length).toBe(1);
         expect(todos[0].text).toBe(text);
         done();
@@ -33,21 +41,32 @@ describe('POST /todos', () => {
   });
 
 
-  it('Should not create data when bad request is made', (done) => {
+  it('should not create a new todo when bad request', (done) => {
 
     request(app)
     .post('/todos')
-    .send({})  // sending empty data
     .expect(400)
     .end((err, res) => {
       if(err){
         return done(err);
       }
-
       Todo.find().then((todos) =>{
-        expect(todos.length).toBe(1);
+        expect(todos.length).toBe(2);
         done();
       }).catch((e) => done(e));
     });
+  });
+});
+
+describe('GET /todos', () => {
+  it('should get the todos', (done) => {
+    request(app)
+    .get('/todos')
+    .expect(200)
+    .expect((res) => {   // custum expect calls
+      expect(res.body[0].text).toBe(todos[0].text);
+      expect(res.body[1].text).toBe(todos[1].text);
+    })
+    .end(done);
   });
 });

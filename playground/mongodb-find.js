@@ -1,4 +1,4 @@
-const MongoClient = require('mongodb').MongoClient;
+ const MongoClient = require('mongodb').MongoClient;
 
 var a = 7;
 MongoClient.connect('mongodb://localhost:27017/', (err, client) =>  {
