@@ -1,3 +1,4 @@
+const {ObjectId} = require('mongodb');
 const expect = require('expect');
 const request = require('supertest');
 
@@ -5,8 +6,10 @@ const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
 var todos = [{
+  _id : new ObjectId(),
   text : 'cooking'
 }, {
+  _id : new ObjectId(),
   text : 'Programmming'
 }];
 
@@ -67,6 +70,36 @@ describe('GET /todos', () => {
       expect(res.body[0].text).toBe(todos[0].text);
       expect(res.body[1].text).toBe(todos[1].text);
     })
+    .end(done);
+  });
+});
+
+
+describe('GET /todos/id', () => {
+  it('should get the specific todo', (done) => {
+    request(app)
+    .get(`/todos/${todos[0]._id.toHexString()}`)
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todo.text).toBe(todos[0].text);
+    })
+    .end(done);
+
+  });
+
+  it('should get the 404 on having inavlid id', (done) => {
+    request(app)
+    .get('/todos/123')
+    .expect(404)
+    .end(done);
+  });
+
+  it('should return 404 on having id not present in collections', (done) => {
+    var hexId = new ObjectId().toHexString();
+
+    request(app)
+    .get(`/todos/${hexId}`)
+    .expect(404)
     .end(done);
   });
 });
