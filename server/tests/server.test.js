@@ -162,7 +162,7 @@ describe('UPDATE /todos/id', () => {
       expect(res.body.todo.completed).toBe(true);
       expect(res.body.todo.completedAt).not.toBe(null);
     })
-    .end(done);
+    .end(done); 
   });
 
 
