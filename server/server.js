@@ -11,6 +11,8 @@ var app = express();
 app.use(bodyParser.json());
 const port = process.env.PORT || 3000;
 
+
+
 app.post('/todos', (req, res) => {
   var todo = new Todo({
     text : req.body.text
@@ -21,10 +23,6 @@ app.post('/todos', (req, res) => {
   }, (err) => {
     res.status(400).send(err);
   });
-});
-
-app.get('/', (req, res) => {
-res.send('hello');
 });
 
 
@@ -51,9 +49,25 @@ app.get('/todos/:id', (req, res) => {
   }).catch((e) => {
     res.status(400).send('Error');
   });
-
-
 });
+
+app.delete('/todos/:id', (req, res) => {
+  var id = req.params.id;
+
+  if(!ObjectId.isValid(id)){
+     return res.status(404).send('404 NOT FOUND');
+  }
+
+  Todo.findByIdAndRemove(id).then((todo) => {
+    if(!todo){
+      return res.status(404).send('404 NOT FOUND');
+    }
+    res.status(200).send({todo});
+  }).catch((e) => {
+    res.status(400).send('Error');
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`app started on server ${port}`);
