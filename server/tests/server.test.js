@@ -103,3 +103,76 @@ describe('GET /todos/id', () => {
     .end(done);
   });
 });
+
+
+describe('DELETE /todos/id', () => {
+  it('should delete a specific todo', (done) => {
+    request(app)
+    .delete(`/todos/${todos[0]._id.toHexString()}`)
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todo.text).toBe(todos[0].text);
+    })
+    .end(done);
+  });
+
+
+  it('should get the 404 on having inavlid id', (done) => {
+    request(app)
+    .delete('/todos/123')
+    .expect(404)
+    .end(done);
+  });
+
+  it('should return 404 on having id not present in collections', (done) => {
+    var hexId = new ObjectId().toHexString();
+
+    request(app)
+    .delete(`/todos/${hexId}`)
+    .expect(404)
+    .end(done);
+  });
+});
+
+
+describe('UPDATE /todos/id', () => {
+  it('should UPDATE a specific todo', (done) => {
+    request(app)
+    .patch(`/todos/${todos[0]._id.toHexString()}`)
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todo.completed).toBe(false);
+      expect(res.body.todo.completedAt).toBe(null);
+    })
+    .end(done);
+  });
+
+  it('should UPDATE a specific todo', (done) => {
+    request(app)
+    .patch(`/todos/${todos[0]._id.toHexString()}`)
+    .send({"completed" : true})
+    .expect(200)
+    .expect((res) => {
+      expect(res.body.todo.completed).toBe(true);
+      expect(res.body.todo.completedAt).not.toBe(null);
+    })
+    .end(done);
+  });
+
+
+  it('should get the 404 on having inavlid id', (done) => {
+    request(app)
+    .delete('/todos/123')
+    .expect(404)
+    .end(done);
+  });
+
+  it('should return 404 on having id not present in collections', (done) => {
+    var hexId = new ObjectId().toHexString();
+
+    request(app)
+    .delete(`/todos/${hexId}`)
+    .expect(404)
+    .end(done);
+  });
+});
