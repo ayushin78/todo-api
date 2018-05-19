@@ -88,6 +88,7 @@ app.patch('/todos/:id', (req, res) => {
     if(!todo){
       return res.status(404).send('404 NOT FOUND');
     }
+
     res.status(200).send({todo});
   }).catch((e) => {
     res.status(400).send('Error');

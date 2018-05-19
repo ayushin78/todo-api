@@ -136,18 +136,24 @@ describe('DELETE /todos/id', () => {
 
 
 describe('UPDATE /todos/id', () => {
+
   it('should UPDATE a specific todo', (done) => {
+
+    var text = "helllooooo";
+
     request(app)
     .patch(`/todos/${todos[0]._id.toHexString()}`)
+    .send({text})
     .expect(200)
     .expect((res) => {
+      expect(res.body.todo.text).toBe(text);
       expect(res.body.todo.completed).toBe(false);
       expect(res.body.todo.completedAt).toBe(null);
     })
     .end(done);
   });
 
-  it('should UPDATE a specific todo', (done) => {
+  it('should UPDATE that a specific todo is completed', (done) => {
     request(app)
     .patch(`/todos/${todos[0]._id.toHexString()}`)
     .send({"completed" : true})
