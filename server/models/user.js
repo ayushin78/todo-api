@@ -76,7 +76,7 @@ userSchema.pre('save', function (next) { // pre is used as middleware and will
   // be executed everytime a save is used
 
   var user = this;
-
+  
   if(user.isModified('password')){
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(user.password, salt, (err, hash) => {
