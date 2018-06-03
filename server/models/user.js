@@ -57,6 +57,18 @@ userSchema.methods.generateAuthToken = function () {
   });// returned this promise after using then to enable promise chaining
 }
 
+userSchema.methods.removeToken = function(token) {
+  var user = this;
+
+  return user.update({
+    $pull :{
+        tokens: {
+          token : token
+        }
+      }
+  });
+};
+
 userSchema.statics.findByToken = function(token) {
   var User = this;
   var decoded;
@@ -68,7 +80,9 @@ userSchema.statics.findByToken = function(token) {
   }
 
   return User.findOne({
-    _id : decoded._id
+    _id : decoded._id,
+    'tokens.token' : token,
+    'tokens.access' : 'auth'
   });
 };
 
