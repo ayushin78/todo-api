@@ -5,17 +5,17 @@ const bcrypt = require('bcryptjs');
 var password = 'abc123';
 var i = 1;
 
-// bcrypt.genSalt(10, (err, salt) => {
-//   console.log('sal generated ', i);
-//   bcrypt.hash(password, salt, (err, hash) => {
-//     console.log(hash);
-//   });
-// })
-//
-// var hashedPassword = '$2a$10$1RXJfDejdddrEdhsmz.YieM39FrlauX9RBXUcpQFJ6pwP6.zJTgSS';
-// bcrypt.compare(password, hashedPassword, (err, res) => {
-//   console.log(res);
-// });
+bcrypt.genSalt(10, (err, salt) => {
+  console.log('sal generated ', i);
+  bcrypt.hash(password, salt, (err, hash) => {
+    console.log(hash);
+  });
+})
+
+var hashedPassword = '$2a$10$1RXJfDejdddrEdhsmz.YieM39FrlauX9RBXUcpQFJ6pwP6.zJTgSS';
+bcrypt.compare(password, hashedPassword, (err, res) => {
+  console.log(res);
+});
 
 function function1(id, callback) {
   var text = `calling function1 ${id}`;

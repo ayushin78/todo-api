@@ -53,12 +53,12 @@ userSchema.methods.generateAuthToken = function () {
   user.tokens.push({access, token});
 
   return user.save().then(() => {
-    return token;
-  });
+    return token; // returning value from promise
+  });// returned this promise after using then to enable promise chaining
 }
 
 userSchema.statics.findByToken = function(token) {
-  var user = this;
+  var User = this;
   var decoded;
 
   try{
@@ -72,11 +72,32 @@ userSchema.statics.findByToken = function(token) {
   });
 };
 
+userSchema.statics.findByCredentials = function(email, password) {
+
+  var User = this;
+  return User.findOne({email}).then((user) => {
+    if(!user){
+      return Promise.reject('finding mail error');
+    }
+
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, user.password, (err, res) => {
+        if(res){
+          resolve(user);
+        } else {
+          reject();
+        }
+      });
+    });
+  });
+};
+
+
 userSchema.pre('save', function (next) { // pre is used as middleware and will
   // be executed everytime a save is used
 
   var user = this;
-  
+
   if(user.isModified('password')){
       bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(user.password, salt, (err, hash) => {
