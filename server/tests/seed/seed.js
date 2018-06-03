@@ -3,16 +3,18 @@ const {Todo} = require('./../../models/todo');
 const {User} = require('./../../models/user');
 const jwt = require('jsonwebtoken');
 
-const todos = [{
-  _id : new ObjectId(),
-  text : 'cooking'
-}, {
-  _id : new ObjectId(),
-  text : 'Programmming'
-}];
-
 const userOneId = new ObjectId();
 const userTwoId = new ObjectId();
+
+const todos = [{
+  _id : new ObjectId(),
+  text : 'cooking',
+  _creator: userOneId
+}, {
+  _id : new ObjectId(),
+  text : 'Programmming',
+  _creator : userTwoId
+}];
 
 const users = [{
   _id : userOneId,
@@ -25,7 +27,11 @@ const users = [{
 }, {
   _id: userTwoId,
   email: 'kanishk@gmail.com',
-  password: 'kanishk'
+  password: 'kanishk',
+  tokens:[{
+    access : 'auth',
+    token : jwt.sign({_id: userTwoId, access : 'auth'}, 'abc123')
+  }]
 }];
 
 const populateTodos = (done) => {
@@ -35,7 +41,7 @@ const populateTodos = (done) => {
 };
 
 const populateUsers = (done) => {
-  console.log('filling users in database')
+  
   User.remove({}).then(() => {
     var userOne = new User(users[0]).save();
     var userTwo = new User(users[1]).save();
