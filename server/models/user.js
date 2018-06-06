@@ -124,6 +124,7 @@ userSchema.pre('save', function (next) { // pre is used as middleware and will
   }
 });
 
+
 var User = mongoose.model('User', userSchema);
 
 module.exports = {User};
