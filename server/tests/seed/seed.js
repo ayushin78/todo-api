@@ -22,7 +22,7 @@ const users = [{
   password: 'ayushin78',
   tokens:[{
     access : 'auth',
-    token : jwt.sign({_id: userOneId, access : 'auth'}, 'abc123')
+    token : jwt.sign({_id: userOneId, access : 'auth'}, process.env.JWT_SECRET)
   }]
 }, {
   _id: userTwoId,
@@ -30,7 +30,7 @@ const users = [{
   password: 'kanishk',
   tokens:[{
     access : 'auth',
-    token : jwt.sign({_id: userTwoId, access : 'auth'}, 'abc123')
+    token : jwt.sign({_id: userTwoId, access : 'auth'}, process.env.JWT_SECRET)
   }]
 }];
 
@@ -41,7 +41,7 @@ const populateTodos = (done) => {
 };
 
 const populateUsers = (done) => {
-  
+
   User.remove({}).then(() => {
     var userOne = new User(users[0]).save();
     var userTwo = new User(users[1]).save();
